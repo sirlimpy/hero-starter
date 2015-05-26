@@ -176,11 +176,51 @@ var moves = {
   // This hero will try really hard not to die.
   coward : function(gameData, helpers) {
     return helpers.findNearestHealthWell(gameData);
-  }
+  },
+  
+  // Mine
+  /*
+  if walk past mine steal it
+  if full hp attack nearest enemy
+  if below 50% then heal
+  if heal is above 70% attack weak enemy
+  Heal any allys below 50%
+  Then Mine
+  */
+  //Get stats on the nearest health well
+    
+  ben1: function(gameData, helpers) {
+    var myHero = gameData.activeHero;
+	
+    //Get stats on the nearest health well
+    var healthWellStats = helpers.findNearestObjectDirectionAndDistance(gameData.board, myHero, function(boardTile) {
+      if (boardTile.type === 'HealthWell') {
+        return true;
+      }
+    });
+
+    var distanceToHealthWell = healthWellStats.distance;
+    var directionToHealthWell = healthWellStats.direction;
+	if (myHero.health == 100) {
+      return helpers.findNearestEnemy(gameData);
+	} else if (myHero.health < 100 && distanceToHealthWell === 1) {
+      //Heal if you aren't full health and are close to a health well already
+      return directionToHealthWell;
+    } else if (myHero.health <= 50){
+      // If it is, head towards the nearest health well
+      return helpers.findNearestHealthWell(gameData);
+    } else if (myHero.health >= 70) { //Find nearest enemy
+      return helpers.findNearestWeakerEnemy(gameData);
+    } else if (helpers.findNearestWeakerAlly(gameData,50)){   
+      return helpers.findNearestWeakerAlly(gameData,50);
+    } else {
+      return helpers.findNearestNonTeamDiamondMine(gameData);
+    }
+  },
  };
 
 //  Set our heros strategy
-var  move =  moves.aggressor;
+var  move =  moves.ben1;
 
 // Export the move function here
 module.exports = move;
