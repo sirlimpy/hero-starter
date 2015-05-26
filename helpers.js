@@ -215,6 +215,23 @@ helpers.findNearestWeakerEnemy = function(gameData) {
   //be interpreted as "Stay" by the game object
   return pathInfoObject.direction;
 };
+/*My Function*/
+// Returns the direction of the nearest friendly with lower health
+// (or returns false if there are no accessible allys that fit this description)
+helpers.findNearestWeakerAlly = function(gameData,hp) {
+  var hero = gameData.activeHero;
+  var board = gameData.board;
+
+  //Get the path info object
+  var pathInfoObject = helpers.findNearestObjectDirectionAndDistance(board, hero, function(heroTile) {
+    return heroTile.type === 'Hero' && heroTile.team === hero.team && heroTile.health < hero.health && heroTile.health <= hp;
+  });
+
+  //Return the direction that needs to be taken to achieve the goal
+  //If no weaker enemy exists, will simply return undefined, which will
+  //be interpreted as "Stay" by the game object
+  return pathInfoObject.direction;
+};
 
 // Returns the direction of the nearest enemy
 // (or returns false if there are no accessible enemies)
