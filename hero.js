@@ -209,7 +209,7 @@ var moves = {
     } else if (myHero.health <= 50){
       // If it is, head towards the nearest health well
       return helpers.findNearestHealthWell(gameData);
-    } else if (myHero.health >= 70) { //Find nearest enemy
+    } else if (myHero.health >= 50) { //Find nearest enemy
       return helpers.findNearestWeakerEnemy(gameData);
     } else if (helpers.findNearestWeakerAlly(gameData,50)){   
       return helpers.findNearestWeakerAlly(gameData,50);
